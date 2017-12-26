@@ -1,0 +1,30 @@
+#这是一个参数文件
+detector=ORB
+descriptor=ORB
+good_match_threshold=4
+
+#camera
+camera.cx=325.5
+camera.cy=253.5
+camera.fx=518.0
+camera.fy=519.0
+camera.scale=1000.0
+# 数据相关
+# 起始与终止索引
+start_index=150
+end_index=750
+# 数据所在目录
+rgb_dir=../data12/rgb_png/
+rgb_extension=.png
+depth_dir=../data12/depth_png/
+depth_extension=.png
+# 点云分辨率
+voxel_grid=0.01
+# 是否实时可视化
+visualization_pointcloud=no
+# 最小匹配数量
+min_good_match=10
+# 最小内点
+min_inliers=5
+# 最大运动误差
+max_norm=0.3

@@ -1,0 +1,43 @@
+#include <highgui.h>
+#include <cv.h>
+#include <cxcore.h>
+#include <iostream>
+using namespace std;
+using namespace cv;
+int main()
+{
+
+    IplImage * img1 = cvLoadImage("left.png",0);
+    IplImage * img2 = cvLoadImage("right.png",0);
+    cv::StereoSGBM sgbm;
+    int SADWindowSize = 9;
+    sgbm.preFilterCap = 63;
+    sgbm.SADWindowSize = SADWindowSize > 0 ? SADWindowSize : 3;
+    int cn = img1->nChannels;
+    int numberOfDisparities=64;
+    sgbm.P1 = 8*cn*sgbm.SADWindowSize*sgbm.SADWindowSize;
+    sgbm.P2 = 32*cn*sgbm.SADWindowSize*sgbm.SADWindowSize;
+    sgbm.minDisparity = 0;
+    sgbm.numberOfDisparities = numberOfDisparities;
+    sgbm.uniquenessRatio = 10;
+    sgbm.speckleWindowSize = 100;
+    sgbm.speckleRange = 32;
+    sgbm.disp12MaxDiff = 1;
+    Mat disp, disp8;
+    int64 t = getTickCount();
+    sgbm((Mat)img1, (Mat)img2, disp);
+    t = getTickCount() - t;
+    cout<<"Time elapsed:"<<t*1000/getTickFrequency()<<endl;
+    disp.convertTo(disp8, CV_8U, 255/(numberOfDisparities*16.));
+
+    namedWindow("left", 1);
+    cvShowImage("left", img1);
+    namedWindow("right", 1);
+    cvShowImage("right", img2);
+    namedWindow("disparity", 1);
+    imshow("disparity", disp8);
+    waitKey();
+    imwrite("sgbm_disparity.png", disp8);   
+    cvDestroyAllWindows();
+    return 0;
+}
